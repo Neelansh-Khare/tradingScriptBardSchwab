@@ -1,6 +1,6 @@
 # Schwab-AI Portfolio Manager
 
-A Python application that automatically connects to your Charles Schwab account via the schwab-py library and uses AI/LLM APIs to analyze and manage your portfolio with a risk-averse approach.
+A Python application that automatically connects to your Charles Schwab account via the schwab-py library and uses AI/LLM APIs (OpenAI, Claude, Gemini) to analyze and manage your portfolio with a risk-averse approach. It also integrates real-time market data from various providers.
 
 ## Overview
 
@@ -16,12 +16,13 @@ This application helps you manage your investment portfolio by:
 
 - **Secure Authentication**: Manages OAuth authentication with Schwab API securely
 - **Portfolio Analysis**: Retrieves and analyzes your current holdings
-- **AI-Powered Insights**: Leverages LLMs to analyze market trends, news, and portfolio performance
+- **Real-time Market Data**: Integrates with multiple data providers (Alpha Vantage, Finnhub, Polygon.io, Yahoo Finance)
+- **AI-Powered Insights**: Leverages LLMs (OpenAI, Claude, Gemini) to analyze market trends, news, and portfolio performance
 - **Risk-Averse Algorithm**: Implements trading strategies focused on preserving capital
 - **Automatic Trading**: Executes buy/sell orders based on AI recommendations
 - **Customizable Risk Profile**: Adjust risk tolerance and investment preferences
 - **Detailed Logging**: Comprehensive tracking of all analyses and transactions
-- **Regular Reports**: Generate performance reports and insights
+- **Regular Reports**: Generate performance reports and insights with visualizations
 
 ## Prerequisites
 
@@ -65,10 +66,22 @@ SCHWAB_API_KEY=your_api_key
 SCHWAB_APP_SECRET=your_app_secret
 SCHWAB_CALLBACK_URL=your_callback_url
 SCHWAB_TOKEN_PATH=path/to/token.json
+SCHWAB_ACCOUNT_ID=your_account_id
 
 # LLM API credentials (choose one or more)
 OPENAI_API_KEY=your_openai_key
+OPENAI_MODEL=gpt-4
+
 ANTHROPIC_API_KEY=your_anthropic_key
+ANTHROPIC_MODEL=claude-3-opus-20240229
+
+GEMINI_API_KEY=your_gemini_key
+GEMINI_MODEL=gemini-pro
+
+# Market data API credentials (optional, will use yfinance as fallback)
+ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key
+FINNHUB_API_KEY=your_finnhub_key
+POLYGON_API_KEY=your_polygon_key
 
 # Risk profile settings (1-10, where 1 is most conservative)
 RISK_TOLERANCE=3
@@ -78,6 +91,8 @@ MAX_SECTOR_EXPOSURE_PERCENT=20
 # Trading parameters
 ENABLE_AUTO_TRADING=false  # Set to true to enable automatic trading
 DRY_RUN=true  # Set to false to execute real trades
+MAX_TRADES_PER_SESSION=5
+MIN_CASH_RESERVE_PERCENT=5
 ```
 
 ## Usage
@@ -132,7 +147,11 @@ schwab-ai-portfolio-manager/
 │   │   ├── client.py            # LLM client interface
 │   │   ├── claude.py            # Anthropic Claude implementation
 │   │   ├── openai.py            # OpenAI GPT implementation
+│   │   ├── gemini.py            # Google Gemini implementation
 │   │   └── prompts.py           # LLM prompt templates
+│   ├── data/
+│   │   ├── __init__.py
+│   │   └── market_data.py       # Real-time market data client
 │   ├── analysis/
 │   │   ├── __init__.py
 │   │   ├── portfolio.py         # Portfolio analysis utilities
@@ -149,6 +168,7 @@ schwab-ai-portfolio-manager/
 │       ├── logging.py           # Logging utilities
 │       └── reporting.py         # Report generation
 └── tests/
+    ├── README.md                # Testing guide
     ├── __init__.py
     ├── test_auth.py             # Authentication tests
     ├── test_analysis.py         # Analysis tests
