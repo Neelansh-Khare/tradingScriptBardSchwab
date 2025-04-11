@@ -1,5 +1,5 @@
 # Schwab API wrapper
-schwab-py==0.2.1
+schwab-py==1.5.0
 
 # Data processing and analysis
 pandas==2.1.4
